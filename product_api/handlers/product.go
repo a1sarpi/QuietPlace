@@ -1,10 +1,11 @@
 package handlers
 
 import (
-	data "command-line-arguments/home/sarpi/QuietPlace/product api/data/products.go"
 	"encoding/json"
 	"log"
 	"net/http"
+
+	data "github.com/a1sarpi/QuietPlace/product api/data"
 )
 
 type Products struct {

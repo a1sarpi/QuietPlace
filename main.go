@@ -8,12 +8,12 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/a1sarpi/QuietPlace/handlers"
+	"github.com/a1sarpi/QuietPlace/product_api/handlers"
 )
 
 func main() {
 
-	env.Parse()
+	// env.Parse()
 
 	l := log.New(os.Stdout, "product-api", log.LstdFlags)
 
