@@ -9,7 +9,7 @@ import (
 	// "regexp"
 	// "strconv"
 
-	"github.com/a1sarpi/QuietPlace/product_api/data"
+	data "github.com/a1sarpi/QuietPlace/product_api/data"
 	"github.com/gorilla/mux"
 )
 
@@ -23,14 +23,12 @@ func NewProducts(l *log.Logger) *Products {
 	return &Products{l}
 }
 
-// getProducts returns the products from the data store
 func (p *Products) GetProducts(rw http.ResponseWriter, r *http.Request) {
-	p.l.Println("Handle GET Products")
+	p.l.Println(("Handle GET Products"))
 
 	// fetch the products from the datastore
 	lp := data.GetProducts()
 
-	// serialize the list to JSON
 	err := lp.ToJSON(rw)
 	if err != nil {
 		http.Error(rw, "Unable to marshal json", http.StatusInternalServerError)
@@ -41,7 +39,7 @@ func (p *Products) AddProduct(rw http.ResponseWriter, r *http.Request) {
 	p.l.Println("Handle POST Product")
 
 	prod := r.Context().Value(KeyProduct{}).(data.Product)
-	data.AddProduct(&prod)
+	data.AddProducts(&prod)
 }
 
 func (p Products) UpdateProducts(rw http.ResponseWriter, r *http.Request) {
@@ -52,17 +50,17 @@ func (p Products) UpdateProducts(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p.l.Println("Handle PUT Product", id)
+	p.l.Println("Handle POST Product")
 	prod := r.Context().Value(KeyProduct{}).(data.Product)
 
-	err = data.UpdateProduct(id, &prod)
+	err = data.UpdateProducts(id, &prod)
 	if err == data.ErrProductNotFound {
-		http.Error(rw, "Product not found", http.StatusNotFound)
+		http.Error(rw, "Product Not Found", http.StatusNotFound)
 		return
 	}
 
 	if err != nil {
-		http.Error(rw, "Product not found", http.StatusInternalServerError)
+		http.Error(rw, "Product Not Found", http.StatusInternalServerError)
 		return
 	}
 }
@@ -84,7 +82,7 @@ func (p Products) MiddlewareValidateProduct(next http.Handler) http.Handler {
 		ctx := context.WithValue(r.Context(), KeyProduct{}, prod)
 		r = r.WithContext(ctx)
 
-		// Call the next handler, which can be another middleware in the chain, or the final handler.
+		// call the handler. which can be another middleware in the chain, or the final handler
 		next.ServeHTTP(rw, r)
 	})
 }
