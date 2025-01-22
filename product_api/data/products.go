@@ -1,23 +1,80 @@
 package data
 
-import "time"
+import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"time"
+)
 
+// Defines the structure for an API product
 type Product struct {
-	ID          int
-	Name        string
-	Description string
-	Price       float32
-	SKU         string
-	CreatedOn   string
-	UpdatedOn   string
-	DeletedOn   string
+	ID          int     `json:"id"`
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Price       float32 `json:"price"`
+	SKU         string  `json:"sku"`
+	CreatedOn   string  `json:"-"`
+	UpdatedOn   string  `json:"-"`
+	DeletedOn   string  `json:"-"`
 }
 
-func GetProducts() []*Product {
+type Products []*Product
+
+func (p *Product) FromJSON(r io.Reader) error {
+	e := json.NewDecoder(r)
+	return e.Decode(p)
+}
+
+// ToJSON serialize the contents of the collection to JSON
+// NewEncoder provides better performance than json.Unmarshal as it does not
+// have to buffer the output into an in memory slice of bytes
+// this reduces allocations and the overheads of the service
+// https://golang.org/pkg/encoding/json/#NewEncoder
+func (p *Products) ToJSON(w io.Writer) error {
+	e := json.NewEncoder(w)
+	return e.Encode(p)
+}
+
+func GetProducts() Products {
 	return productList
 }
 
-var productList = []*Product{
+func AddProducts(p *Product) {
+	p.ID = getNextID()
+	productList = append(productList, p)
+}
+
+func UpdateProducts(id int, p *Product) error {
+	_, pos, err := findProduct(id)
+	if err != nil {
+		return err
+	}
+
+	p.ID = id
+	productList[pos] = p
+
+	return nil
+}
+
+var ErrProductNotFound = fmt.Errorf("Product Not Found")
+
+func findProduct(id int) (*Product, int, error) {
+	for i, p := range productList {
+		if p.ID == id {
+			return p, i, nil
+		}
+	}
+
+	return nil, -1, ErrProductNotFound
+}
+
+func getNextID() int {
+	lp := productList[len(productList)-1]
+	return lp.ID + 1
+}
+
+var productList = Products{
 	&Product{
 		ID:          1,
 		Name:        "Latte",
