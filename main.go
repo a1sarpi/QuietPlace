@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/a1sarpi/QuietPlace/product_api/handlers"
+	"github.com/go-openapi/runtime/middleware"
 	"github.com/gorilla/mux"
 )
 
@@ -32,6 +33,12 @@ func main() {
 	postRouter.HandleFunc("/", ph.AddProduct)
 	postRouter.Use(ph.MiddlewareValidateProduct)
 
+	opts := middleware.RedocOpts{SpecURL: "/swagger.yaml"}
+	sh := middleware.Redoc(opts, nil)
+
+	getRouter.Handle("/docs", sh)
+
+	// create a new server
 	s := &http.Server{
 		Addr:         ":9090",
 		Handler:      sm,
