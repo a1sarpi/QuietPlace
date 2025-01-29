@@ -38,7 +38,7 @@ type errorValidationWrapper struct {
 }
 
 // A list of products
-// swagger:response productsResponse
+// swagger:response productResponse
 type productsResponseWrapper struct {
 	// All current products
 	// in: body
@@ -67,7 +67,7 @@ type productParamsWrapper struct {
 	Body data.Product
 }
 
-// swagger:parameters updateProduct
+// swagger:parameters listSingleProduct deleteProduct
 type productIDParamsWrapper struct {
 	// The id of the product for which the operation relates
 	// in: path

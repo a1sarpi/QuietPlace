@@ -1,15 +1,16 @@
 package handlers
 
 import (
+	"errors"
 	"github.com/a1sarpi/QuietPlace/product_api/data"
 	"net/http"
 )
 
 // swagger:route DELETE /products/{id} products deleteProduct
-// Update a products details
+// Return a list of products
 //
 // responses:
-// 	201: noContentResponse
+// 	   201: noContentResponse
 // 404: errorResponse
 // 501: errorResponse
 
@@ -18,8 +19,8 @@ func (p *Products) Delete(rw http.ResponseWriter, r *http.Request) {
 	id := getProductID(r)
 
 	p.l.Println("[DEBUG] deleting record id", id)
-	err := data.Delete(id)
-	if err == data.ErrProductNotFound {
+	err := data.DeleteProduct(id)
+	if errors.Is(err, data.ErrProductNotFound) {
 		p.l.Println("[ERROR] deleting record id does not exist")
 
 		rw.WriteHeader(http.StatusNotFound)

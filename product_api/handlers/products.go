@@ -2,11 +2,12 @@ package handlers
 
 import (
 	"fmt"
-	"github.com/a1sarpi/QuietPlace/product_api/data"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/a1sarpi/QuietPlace/product_api/data"
+	"github.com/gorilla/mux"
 )
 
 // KeyProduct is a key used for the Product object in the context
@@ -23,7 +24,7 @@ func NewProducts(l *log.Logger, v *data.Validation) *Products {
 	return &Products{l: l, v: v}
 }
 
-// ErrInvalidProductPath is an error message when the product path is not valid
+// ErrInvalidProductsPath is an error message when the product path is not valid
 var ErrInvalidProductsPath = fmt.Errorf("Invalid Path, path should be /products/[ID]")
 
 // GenericError is a generic error message returned by a server
@@ -41,6 +42,7 @@ type ValidationError struct {
 // this should never happen as the router ensures that
 // this is a valid number
 func getProductID(r *http.Request) int {
+	// parse the product id from the url
 	vars := mux.Vars(r)
 
 	// convert the id into an integer and return

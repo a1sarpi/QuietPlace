@@ -49,7 +49,7 @@ func GetProducts() Products {
 	return productList
 }
 
-// GetProductsByID returns a single product which matches the id from the
+// GetProductByID returns a single product which matches the id from the
 // database.
 // If a product is not found this function returns a ProductNotFound error
 func GetProductByID(id int) (*Product, error) {
@@ -113,14 +113,14 @@ var productList = Products{
 	&Product{
 		ID:          1,
 		Name:        "Latte",
-		Description: "Frothy milky coffe",
+		Description: "Frothy milky coffee",
 		Price:       2.45,
 		SKU:         "abc323",
 	},
 	&Product{
 		ID:          2,
 		Name:        "Espresso",
-		Description: "Short and strong coffe without milk",
+		Description: "Short and strong coffee without milk",
 		Price:       1.99,
 		SKU:         "fjd34",
 	},

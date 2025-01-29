@@ -2,10 +2,13 @@ package data
 
 import (
 	"fmt"
-	"github.com/go-playground/validator"
 	"regexp"
+
+	"github.com/go-playground/validator"
 )
 
+// ValidationError wraps the validators FieldError so we do not
+// expose this to out code
 type ValidationError struct {
 	validator.FieldError
 }
@@ -24,7 +27,7 @@ type ValidationErrors []ValidationError
 
 // Errors converts the slice into a string slice
 func (v ValidationErrors) Errors() []string {
-	errors := []string{}
+	var errors []string
 	for _, err := range v {
 		errors = append(errors, err.Error())
 	}
