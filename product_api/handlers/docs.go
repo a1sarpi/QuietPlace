@@ -19,9 +19,9 @@ import "github.com/a1sarpi/QuietPlace/product_api/data"
 
 //
 // NOTE: Types defined here are purely for documentation purposes
-// these types are not used by any of the handlers
+// these types are not used by any of the handers
 
-// Generic error message returned as s string
+// Generic error message returned as a string
 // swagger:response errorResponse
 type errorResponseWrapper struct {
 	// Description of the error
@@ -38,7 +38,7 @@ type errorValidationWrapper struct {
 }
 
 // A list of products
-// swagger:response productResponse
+// swagger:response productsResponse
 type productsResponseWrapper struct {
 	// All current products
 	// in: body
@@ -47,7 +47,7 @@ type productsResponseWrapper struct {
 
 // Data structure representing a single product
 // swagger:response productResponse
-type productResponse struct {
+type productResponseWrapper struct {
 	// Newly created product
 	// in: body
 	Body data.Product
@@ -60,7 +60,7 @@ type noContentResponseWrapper struct {
 
 // swagger:parameters updateProduct createProduct
 type productParamsWrapper struct {
-	// Product data structure to Update or Create
+	// Product data structure to Update or Create.
 	// Note: the id field is ignored by update and create operations
 	// in: body
 	// required: true

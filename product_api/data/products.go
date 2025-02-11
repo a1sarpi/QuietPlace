@@ -5,7 +5,7 @@ import (
 )
 
 // ErrProductNotFound is an error raised when a product can not be found in the database
-var ErrProductNotFound = fmt.Errorf("Product Not Found")
+var ErrProductNotFound = fmt.Errorf("product not found")
 
 // Product defines the structure for an API product
 // swagger:model

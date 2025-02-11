@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/a1sarpi/QuietPlace/product_api/data"
@@ -16,12 +17,14 @@ import (
 
 // Update handles PUT requests to update products
 func (p *Products) Update(rw http.ResponseWriter, r *http.Request) {
+	rw.Header().Add("Content-Type", "application/json")
+
 	// fetch the product from the context
 	prod := r.Context().Value(KeyProduct{}).(data.Product)
 	p.l.Println("[DEBUG] updating record id", prod.ID)
 
 	err := data.UpdateProduct(prod)
-	if err == data.ErrProductNotFound {
+	if errors.Is(err, data.ErrProductNotFound) {
 		p.l.Println("[ERROR] product not found", err)
 
 		rw.WriteHeader(http.StatusNotFound)

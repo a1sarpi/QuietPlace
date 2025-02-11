@@ -52,20 +52,19 @@ func NewValidation() *Validation {
 // for more detail the returned error can be cast into a
 // validator.ValidationErrors collection
 //
-// if ve, ok := err.(validator.ValidationErrors); ok {
-//			fmt.Println(ve.Namespace())
-//			fmt.Println(ve.Field())
-//			fmt.Println(ve.StructNamespace())
-//			fmt.Println(ve.StructField())
-//			fmt.Println(ve.Tag())
-//			fmt.Println(ve.ActualTag())
-//			fmt.Println(ve.Kind())
-//			fmt.Println(ve.Type())
-//			fmt.Println(ve.Value())
-//			fmt.Println(ve.Param())
-//			fmt.Println()
-//	}
-
+//	if ve, ok := err.(validator.ValidationErrors); ok {
+//				fmt.Println(ve.Namespace())
+//				fmt.Println(ve.Field())
+//				fmt.Println(ve.StructNamespace())
+//				fmt.Println(ve.StructField())
+//				fmt.Println(ve.Tag())
+//				fmt.Println(ve.ActualTag())
+//				fmt.Println(ve.Kind())
+//				fmt.Println(ve.Type())
+//				fmt.Println(ve.Value())
+//				fmt.Println(ve.Param())
+//				fmt.Println()
+//		}
 func (v *Validation) Validate(i interface{}) ValidationErrors {
 	errs := v.validate.Struct(i).(validator.ValidationErrors)
 
@@ -85,7 +84,7 @@ func (v *Validation) Validate(i interface{}) ValidationErrors {
 
 // validateSKU
 func validateSKU(fl validator.FieldLevel) bool {
-	// sku is of format abc-absd-dfsdf
+	// sku is of format abc-abc-abc
 	re := regexp.MustCompile(`[a-z]+-[a-z]+-[a-z]+`)
 	sku := re.FindAllString(fl.Field().String(), -1)
 

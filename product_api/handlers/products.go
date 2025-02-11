@@ -25,7 +25,7 @@ func NewProducts(l *log.Logger, v *data.Validation) *Products {
 }
 
 // ErrInvalidProductsPath is an error message when the product path is not valid
-var ErrInvalidProductsPath = fmt.Errorf("Invalid Path, path should be /products/[ID]")
+var ErrInvalidProductsPath = fmt.Errorf("invalid Path, path should be /products/[ID]")
 
 // GenericError is a generic error message returned by a server
 type GenericError struct {
@@ -38,7 +38,7 @@ type ValidationError struct {
 }
 
 // getProductID returns the product ID from the URL
-// Panics if cannot convert the id into an integer
+// Panics if you cannot convert the id into an integer
 // this should never happen as the router ensures that
 // this is a valid number
 func getProductID(r *http.Request) int {
