@@ -19,7 +19,7 @@ func setupLocal(t *testing.T) (*Local, string, func()) {
 	}
 
 	// Assuming 0 is a default value for the int argument
-	l, err := NewLocal(10000, dir) // Pass an int (e.g., 0) and the directory path
+	l, err := NewLocal(dir, 10000) // Pass an int (e.g., 0) and the directory path
 	if err != nil {
 		t.Fatal(err)
 	}

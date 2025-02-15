@@ -19,7 +19,7 @@ type Local struct {
 //
 //	basePath is the base directory to save files to
 //	maxSize is the max number of bytes that a file can be
-func NewLocal(maxSize int, basePath string) (*Local, error) {
+func NewLocal(basePath string, maxSize int) (*Local, error) {
 	p, err := filepath.Abs(basePath)
 	if err != nil {
 		return nil, err
