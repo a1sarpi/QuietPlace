@@ -35,7 +35,7 @@ func (f *Files) UploadREST(rw http.ResponseWriter, r *http.Request) {
 	f.saveFile(id, fn, rw, r.Body)
 }
 
-// UploadMultipar something
+// UploadMultipart something
 func (f *Files) UploadMultipart(rw http.ResponseWriter, r *http.Request) {
 	err := r.ParseMultipartForm(128 * 1024)
 	if err != nil {
