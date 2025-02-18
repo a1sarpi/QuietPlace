@@ -3,15 +3,16 @@ consumes:
     - application/json
 definitions:
     GenericError:
-        description: GenericError is a generic error message returned by a server
+        description: GenericError GenericError is a generic error message returned by a server
         properties:
             message:
+                description: message
                 type: string
                 x-go-name: Message
         type: object
-        x-go-package: github.com/a1sarpi/QuietPlace/product_api/handlers
+        x-go-package: github.com/a1sarpi/QuietPlace/product_api/sdk/models
     Product:
-        description: Product defines the structure for an API product
+        description: Product Product defines the structure for an API product
         properties:
             description:
                 description: the Description for this product
@@ -44,17 +45,18 @@ definitions:
             - price
             - sku
         type: object
-        x-go-package: github.com/a1sarpi/QuietPlace/product_api/data
+        x-go-package: github.com/a1sarpi/QuietPlace/product_api/sdk/models
     ValidationError:
-        description: ValidationError is a collection of validation error messages
+        description: ValidationError ValidationError is a collection of validation error messages
         properties:
             message:
+                description: messages
                 items:
                     type: string
                 type: array
                 x-go-name: Messages
         type: object
-        x-go-package: github.com/a1sarpi/QuietPlace/product_api/handlers
+        x-go-package: github.com/a1sarpi/QuietPlace/product_api/sdk/models
 info:
     description: Documentation for Product API
     title: of Product API
