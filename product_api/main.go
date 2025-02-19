@@ -16,14 +16,17 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	gohandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+
+	"github.com/nicholasjackson/env"
 )
 
+var bindAdress = env.String("BIND_ADRESS", false, ":9090", "Bind address for the server")
+
 func main() {
+	env.Parse()
+
 	l := log.New(os.Stdout, "product-api", log.LstdFlags)
 	v := data.NewValidation()
-
-	// create the handlers
-	ph := handlers.NewProducts(l, v)
 
 	conn, err := grpc.NewClient("localhost:9092", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -34,6 +37,9 @@ func main() {
 
 	// create client
 	cc := protos.NewCurrencyClient(conn)
+
+	// create the handlers
+	ph := handlers.NewProducts(l, v, cc)
 
 	// create a new serve mux and register the handlers
 	sm := mux.NewRouter()
@@ -62,7 +68,7 @@ func main() {
 	getR.Handle("/swagger.yaml", http.FileServer(http.Dir("./")))
 
 	// CORS
-	ch := gohandlers.CORS(gohandlers.AllowedOrigins([]string{"http://localhost:3000"}))
+	ch := gohandlers.CORS(gohandlers.AllowedOrigins([]string{"*"}))
 
 	// create a new server
 	s := &http.Server{

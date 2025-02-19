@@ -1,28 +1,28 @@
 package handlers
 
 import (
-	"errors"
+	"context"
+	protos "github.com/a1sarpi/QuietPlace/currency/protos/currency"
 	"net/http"
 
 	"github.com/a1sarpi/QuietPlace/product_api/data"
 )
 
 // swagger:route GET /products products listProducts
-// Returns a list of products from the database
+// Return a list of products from the database
 // responses:
-// 		200: productResponse
+//	200: productsResponse
 
 // ListAll handles GET requests and returns all current products
 func (p *Products) ListAll(rw http.ResponseWriter, r *http.Request) {
 	p.l.Println("[DEBUG] get all records")
-
 	rw.Header().Add("Content-Type", "application/json")
 
 	prods := data.GetProducts()
 
 	err := data.ToJSON(prods, rw)
 	if err != nil {
-		// we should never be here but log the error just in case
+		// we should never be here but log the error just incase
 		p.l.Println("[ERROR] serializing product", err)
 	}
 }
@@ -30,20 +30,23 @@ func (p *Products) ListAll(rw http.ResponseWriter, r *http.Request) {
 // swagger:route GET /products/{id} products listSingleProduct
 // Return a list of products from the database
 // responses:
-// 		200: productResponse
-// 		404: errorResponse
+//	200: productResponse
+//	404: errorResponse
 
 // ListSingle handles GET requests
 func (p *Products) ListSingle(rw http.ResponseWriter, r *http.Request) {
+	rw.Header().Add("Content-Type", "application/json")
+
 	id := getProductID(r)
 
-	p.l.Println("[DEBUG] get record", id)
+	p.l.Println("[DEBUG] get record id", id)
 
 	prod, err := data.GetProductByID(id)
 
-	switch {
-	case err == nil:
-	case errors.Is(err, data.ErrProductNotFound):
+	switch err {
+	case nil:
+
+	case data.ErrProductNotFound:
 		p.l.Println("[ERROR] fetching product", err)
 
 		rw.WriteHeader(http.StatusNotFound)
@@ -57,9 +60,26 @@ func (p *Products) ListSingle(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// get exchange rate
+	rr := &protos.RateRequest{
+		Base:        protos.Currencies(protos.Currencies_value["EUR"]),
+		Destination: protos.Currencies(protos.Currencies_value["GBP"]),
+	}
+
+	resp, err := p.cc.GetRate(context.Background(), rr)
+	if err != nil {
+		p.l.Println("[Error] error getting new rate", err)
+		data.ToJSON(&GenericError{Message: err.Error()}, rw)
+		return
+	}
+
+	p.l.Printf("Resp %#v", resp)
+
+	prod.Price = prod.Price * resp.Rate
+
 	err = data.ToJSON(prod, rw)
 	if err != nil {
-		// we should never be here but log the error just in case
+		// we should never be here but log the error just incase
 		p.l.Println("[ERROR] serializing product", err)
 	}
 }
