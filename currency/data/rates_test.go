@@ -13,6 +13,5 @@ func TestRates(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Sprintf("$#v", tr.rates)
-
+	fmt.Printf("Rates %#v. ", tr.rates)
 }
