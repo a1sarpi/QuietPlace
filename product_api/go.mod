@@ -3,7 +3,7 @@ module github.com/a1sarpi/QuietPlace/product_api
 go 1.23.5
 
 require (
-	github.com/a1sarpi/QuietPlace/currency v0.0.0-20250218172953-b6082ae2daa6
+	github.com/a1sarpi/QuietPlace/currency v0.0.0-20250222145032-dd67166c84d3
 	github.com/go-openapi/errors v0.22.0
 	github.com/go-openapi/runtime v0.28.0
 	github.com/go-openapi/strfmt v0.23.0
