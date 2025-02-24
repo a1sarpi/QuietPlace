@@ -5,6 +5,8 @@ import (
 	"github.com/a1sarpi/QuietPlace/currency/data"
 	protos "github.com/a1sarpi/QuietPlace/currency/protos/currency"
 	"github.com/hashicorp/go-hclog"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"io"
 	"time"
 )
@@ -53,6 +55,22 @@ func (c *Currency) handleUpdates() {
 func (c *Currency) GetRate(ctx context.Context, rr *protos.RateRequest) (*protos.RateResponse, error) {
 	c.log.Info("Handle GetRate", "base", rr.GetBase(), "destination", rr.GetDestination())
 
+	if rr.Base == rr.Destination {
+		err := status.Newf(
+			codes.InvalidArgument,
+			"Base currency %s and Destination currency %s cannot be the same",
+			rr.Base.String(),
+			rr.Destination.String(),
+		)
+
+		err, wde := err.WithDetails(rr)
+		if wde != nil {
+			return nil, wde
+		}
+
+		return nil, err.Err()
+	}
+
 	rate, err := c.rates.GetRate(rr.GetBase().String(), rr.GetDestination().String())
 	if err != nil {
 		return nil, err
@@ -84,6 +102,13 @@ func (c *Currency) SubscribeRates(src protos.Currency_SubscribeRatesServer) erro
 		rrs, ok := c.subscriptions[src]
 		if !ok {
 			rrs = []*protos.RateRequest{}
+		}
+
+		// check that subscription does not exist
+		for _, v := range rrs {
+			if v.Base == rr.Base && v.Destination == rr.Destination {
+				// subscription exists return errors
+			}
 		}
 
 		rrs = append(rrs, rr)
